@@ -53,6 +53,16 @@ export default function NavBar() {
                     {t("home.clickToSearch")}
                 </ThemeText>
             </Pressable>
+
+            <IconButton
+                accessibilityLabel="AI 点歌"
+                name="chat-bubble-oval-left-ellipsis"
+                style={styles.aiButton}
+                color={colors.text}
+                onPress={() => {
+                    navigation.navigate(ROUTE_PATH.AI_CHAT);
+                }}
+            />
         </View>
     );
 }
@@ -82,5 +92,8 @@ const styles = StyleSheet.create({
     },
     menu: {
         marginLeft: rpx(24),
+    },
+    aiButton: {
+        marginRight: rpx(24),
     },
 });

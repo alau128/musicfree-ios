@@ -46,6 +46,8 @@ export const ROUTE_PATH = {
     SET_CUSTOM_THEME: "set-custom-theme",
     /** 权限管理 */
     PERMISSIONS: "permissions",
+    /** AI 点歌 */
+    AI_CHAT: "ai-chat",
 } as const;
 
 type ValueOf<T> = T[keyof T];
@@ -102,6 +104,7 @@ interface RouterParams extends RouterParamsBase {
         pluginHash?: string;
         sheetInfo: IMusic.IMusicSheetItemBase;
     };
+    "ai-chat": undefined;
 }
 
 /** 路由参数Hook */

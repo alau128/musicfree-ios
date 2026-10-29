@@ -1,0 +1,12 @@
+diff --git a/node_modules/react-native-track-player/android/build.gradle b/node_modules/react-native-track-player/android/build.gradle
+index ac33473..74cce4b 100644
+--- a/node_modules/react-native-track-player/android/build.gradle
++++ b/node_modules/react-native-track-player/android/build.gradle
+@@ -50,6 +50,7 @@ repositories {
+ }
+ 
+ dependencies {
++    // kotlinaudio 来自项目内本地 Maven 仓库 C:\MusicFree\local-repo (绕开被墙的 jitpack.io)
+     implementation 'com.github.doublesymmetry:kotlinaudio:v2.1.0'
+     // used when building against local maven
+ //    implementation "com.github.doublesymmetry:kotlin-audio:2.1.0"

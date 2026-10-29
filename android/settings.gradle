@@ -17,5 +17,21 @@ rootProject.name = 'MusicFree'
 include ':app'
 includeBuild('../node_modules/@react-native/gradle-plugin')
 
+// 国内镜像 + 项目内本地 Maven 仓库(存放手工构建的 kotlinaudio, 绕开被墙的 jitpack.io)
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
+    repositories {
+        maven { url 'C:/MusicFree/local-repo' }
+        mavenLocal()
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/central' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+
 apply from: new File(["node", "--print", "require.resolve('expo/package.json')"].execute(null, rootDir).text.trim(), "../scripts/autolinking.gradle")
 useExpoModules()

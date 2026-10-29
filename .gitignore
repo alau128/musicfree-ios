@@ -86,3 +86,5 @@ scripts/
 .expo
 dist/
 web-build/
+# 本地 AI 大模型 (2GB, 不入库)
+android/app/src/main/assets/models/

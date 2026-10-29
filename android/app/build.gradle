@@ -124,6 +124,11 @@ android {
 
     namespace "fun.upup.musicfree"
 
+    // GGUF 模型文件在 APK 内保持未压缩 (mmap 友好, 首启复制更快)
+    androidResources {
+        noCompress 'gguf'
+    }
+
     defaultConfig {
         applicationId "fun.upup.musicfree"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -138,12 +143,19 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
-        // !! Add lines
-         release {
-            storeFile file(keystoreProperties['RELEASE_STORE_FILE'])
-            storePassword keystoreProperties['RELEASE_STORE_PASSWORD']
-            keyAlias keystoreProperties['RELEASE_KEY_ALIAS']
-            keyPassword keystoreProperties['RELEASE_KEY_PASSWORD']
+        // !! Add lines (本地无 keystore.properties 时回退 debug 签名参数)
+        release {
+            if (keystorePropertiesFile.exists()) {
+                storeFile file(keystoreProperties['RELEASE_STORE_FILE'])
+                storePassword keystoreProperties['RELEASE_STORE_PASSWORD']
+                keyAlias keystoreProperties['RELEASE_KEY_ALIAS']
+                keyPassword keystoreProperties['RELEASE_KEY_PASSWORD']
+            } else {
+                storeFile file('debug.keystore')
+                storePassword 'android'
+                keyAlias 'androiddebugkey'
+                keyPassword 'android'
+            }
         }
     }
     splits {
