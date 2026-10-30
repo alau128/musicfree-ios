@@ -10,8 +10,8 @@ export const IOS_MODEL_BYTES = 1929902400;
 export const IOS_MODEL_SHA256 =
     "2eaaa26e9db9713f80f0add2ba6b2c2e4624b4a8d12381a13c7449ac17343f11";
 
-// TODO(上传 ModelScope 后填入): https://modelscope.cn/models/<owner>/<repo>/resolve/master/<file>
-export const IOS_MODEL_URL = "";
+export const IOS_MODEL_URL =
+    "https://modelscope.cn/models/again121212/qwen2.5-3b-music-gguf/resolve/master/qwen2.5-3b-music-q4_k_m.gguf";
 
 export type ModelDownloadStatus =
     | "idle"
