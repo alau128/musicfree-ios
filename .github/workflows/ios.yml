@@ -1,0 +1,56 @@
+name: iOS unsigned IPA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install JS dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Pod install
+        working-directory: ios
+        run: |
+          pod --version || sudo gem install cocoapods --no-document
+          pod install --repo-update
+
+      - name: Build (unsigned Release)
+        run: |
+          xcodebuild \
+            -workspace ios/MusicFree.xcworkspace \
+            -scheme MusicFreeNew \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build-ios \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGN_ENTITLEMENTS="" \
+            -quiet
+
+      - name: Package unsigned IPA
+        run: |
+          mkdir -p out/Payload
+          cp -R build-ios/Build/Products/Release-iphoneos/MusicFree.app out/Payload/
+          cd out
+          zip -qry ../MusicFree-unsigned.ipa Payload
+          cd ..
+          ls -lh MusicFree-unsigned.ipa
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: MusicFree-unsigned-ipa
+          path: MusicFree-unsigned.ipa
+          compression-level: 1
+          retention-days: 14

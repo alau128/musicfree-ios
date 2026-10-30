@@ -48,6 +48,8 @@ export const ROUTE_PATH = {
     PERMISSIONS: "permissions",
     /** AI 点歌 */
     AI_CHAT: "ai-chat",
+    /** AI 日推详情 */
+    AI_DAILY: "ai-daily",
 } as const;
 
 type ValueOf<T> = T[keyof T];
@@ -105,6 +107,7 @@ interface RouterParams extends RouterParamsBase {
         sheetInfo: IMusic.IMusicSheetItemBase;
     };
     "ai-chat": undefined;
+    "ai-daily": { date?: string } | undefined;
 }
 
 /** 路由参数Hook */

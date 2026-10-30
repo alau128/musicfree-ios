@@ -21,7 +21,13 @@ import Toast from "@/utils/toast";
 import Clipboard from "@react-native-clipboard/clipboard";
 import Slider from "@react-native-community/slider";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { SectionList, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+    Platform,
+    SectionList,
+    StyleSheet,
+    TouchableOpacity,
+    View,
+} from "react-native";
 import { readdir } from "react-native-fs";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 
@@ -754,6 +760,21 @@ function LyricSetting() {
             }
         },
     );
+
+    // iOS 无状态栏歌词能力，仅保留自动搜索歌词
+    if (Platform.OS !== "android") {
+        return (
+            <View>
+                <ListItem
+                    withHorizontalPadding
+                    heightType="small"
+                    onPress={autoSearchLyric.onPress}>
+                    <ListItem.Content title={autoSearchLyric.title} />
+                    {autoSearchLyric.right}
+                </ListItem>
+            </View>
+        );
+    }
 
     return (
         <View>

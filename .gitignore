@@ -88,3 +88,13 @@ dist/
 web-build/
 # 本地 AI 大模型 (2GB, 不入库)
 android/app/src/main/assets/models/
+
+# 本地 AI 训练工程 (模型与 API 密钥, 不入库)
+.ai-train/
+
+# 本地产物与临时目录
+release/
+local-repo/
+.bundle/
+.adb/
+.plugin-check/

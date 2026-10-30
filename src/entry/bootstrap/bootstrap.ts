@@ -15,6 +15,7 @@ import Theme from "@/core/theme";
 import TrackPlayer from "@/core/trackPlayer";
 import NativeUtils from "@/native/utils";
 import { checkAndCreateDir } from "@/utils/fileUtils";
+import { ensureBundledPlugins } from "@/utils/bundledPlugins";
 import { errorLog, trace } from "@/utils/log";
 import { IPerfLogger, perfLogger } from "@/utils/perfLogger";
 import PersistStatus from "@/utils/persistStatus";
@@ -47,28 +48,31 @@ async function bootstrapImpl() {
         .catch(console.warn); // it's good to explicitly catch and inspect any error
     const logger = perfLogger();
     // 1. 检查权限
-    if (Platform.OS === "android" && Platform.Version >= 30) {
-        const hasPermission = await NativeUtils.checkStoragePermission();
-        if (
-            !hasPermission &&
-            !PersistStatus.get("app.skipBootstrapStorageDialog")
-        ) {
-            showDialog("CheckStorage");
-        }
-    } else {
-        const [readStoragePermission, writeStoragePermission] =
-            await Promise.all([
-                check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE),
-                check(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE),
-            ]);
-        if (
-            !(
-                readStoragePermission === "granted" &&
-                writeStoragePermission === "granted"
-            )
-        ) {
-            await request(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
-            await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE);
+    // iOS 沙盒无需存储权限; 跳过整套 Android 权限流程
+    if (Platform.OS === "android") {
+        if (Platform.Version >= 30) {
+            const hasPermission = await NativeUtils.checkStoragePermission();
+            if (
+                !hasPermission &&
+                !PersistStatus.get("app.skipBootstrapStorageDialog")
+            ) {
+                showDialog("CheckStorage");
+            }
+        } else {
+            const [readStoragePermission, writeStoragePermission] =
+                await Promise.all([
+                    check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE),
+                    check(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE),
+                ]);
+            if (
+                !(
+                    readStoragePermission === "granted" &&
+                    writeStoragePermission === "granted"
+                )
+            ) {
+                await request(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
+                await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE);
+            }
         }
     }
     logger.mark("权限检查完成");
@@ -78,6 +82,10 @@ async function bootstrapImpl() {
     await setupFolder();
     trace("文件夹初始化完成");
     logger.mark("文件夹初始化完成");
+    // 内置插件 (网易云自建) 先落到插件目录, 供 PluginManager.setup 扫描
+    await ensureBundledPlugins().catch(e =>
+        errorLog("内置插件初始化失败", e?.message ?? e),
+    );
 
 
 

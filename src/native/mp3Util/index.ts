@@ -24,6 +24,16 @@ interface IMp3Util {
     getMediaTag: (filePath: string) => Promise<IWritableMeta>;
 }
 
-const Mp3Util = NativeModules.Mp3Util;
+// iOS 未实现本地音频元数据解析：返回空结果，下载/本地歌曲流程降级但不崩
+const fallbackMp3Util: IMp3Util = {
+    getBasicMeta: async () => ({}),
+    getMediaMeta: async () => [],
+    getMediaCoverImg: async () => "",
+    getLyric: async () => "",
+    setMediaTag: async () => {},
+    getMediaTag: async () => ({}),
+};
 
-export default Mp3Util as IMp3Util;
+const Mp3Util = NativeModules.Mp3Util as IMp3Util | undefined;
+
+export default Mp3Util ?? fallbackMp3Util;

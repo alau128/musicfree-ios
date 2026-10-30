@@ -18,6 +18,7 @@ import History from "@/pages/history";
 import SetCustomTheme from "@/pages/setCustomTheme";
 import Permissions from "@/pages/permissions";
 import AiChat from "@/pages/aiChat";
+import AiDaily from "@/pages/aiDaily";
 import { ROUTE_PATH } from "@/core/router/index.ts";
 
 type ValueOf<T> = T[keyof T];
@@ -109,5 +110,9 @@ export const routes: Array<IRoutes> = [
     {
         path: ROUTE_PATH.AI_CHAT,
         component: AiChat,
+    },
+    {
+        path: ROUTE_PATH.AI_DAILY,
+        component: AiDaily,
     },
 ];

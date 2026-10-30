@@ -44,7 +44,25 @@ interface ILyricUtil extends NativeModule {
     requestSystemAlertPermission: () => Promise<boolean>;
 }
 
-const LyricUtil: ILyricUtil = NativeModules.LyricUtil;
+const noop = async () => {};
+
+// iOS 没有状态栏歌词能力：空实现兜底（模块顶层若直接解引用会启动即崩）
+const fallbackLyricUtil = {
+    showStatusBarLyric: noop,
+    hideStatusBarLyric: noop,
+    setStatusBarLyricText: noop,
+    setStatusBarLyricTop: noop,
+    setStatusBarLyricLeft: noop,
+    setStatusBarLyricWidth: noop,
+    setStatusBarLyricFontSize: noop,
+    setStatusBarLyricAlign: noop,
+    setStatusBarColors: noop,
+    checkSystemAlertPermission: async () => false,
+    requestSystemAlertPermission: async () => false,
+} as unknown as ILyricUtil;
+
+const LyricUtil: ILyricUtil =
+    (NativeModules.LyricUtil as ILyricUtil | undefined) ?? fallbackLyricUtil;
 
 const originalShowStatusBarLyric = LyricUtil.showStatusBarLyric;
 

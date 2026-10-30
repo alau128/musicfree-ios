@@ -13,9 +13,11 @@ import Theme from "@/core/theme";
 import HomeBody from "./components/homeBody";
 import HomeBodyHorizontal from "./components/homeBodyHorizontal";
 import useOrientation from "@/hooks/useOrientation";
+import useAiDailyAutoTrigger from "@/pages/aiDaily/useAiDailyAutoTrigger";
 
 function Home() {
     const orientation = useOrientation();
+    useAiDailyAutoTrigger();
 
     return (
         <SafeAreaView edges={["top", "bottom"]} style={styles.appWrapper}>

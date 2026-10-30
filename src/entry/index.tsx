@@ -13,6 +13,7 @@ import globalStyle from "@/constants/globalStyle";
 import Theme from "@/core/theme";
 import { BootstrapComponent } from "./bootstrap/BootstrapComponent";
 import { ToastBaseComponent } from "@/components/base/toast";
+import ModelDownloadOverlay from "@/pages/aiChat/components/modelDownloadOverlay";
 import { StatusBar } from "react-native";
 import { ReduceMotion, ReducedMotionConfig } from "react-native-reanimated";
 import { routes } from "@/core/router/routes.tsx";
@@ -53,9 +54,10 @@ export default function Pages() {
                                     component={route.component}
                                 />
                             ))}
-                        </Stack.Navigator>                        
+                        </Stack.Navigator>
                         <Panels />
                         <Dialogs />
+                        <ModelDownloadOverlay />
                         <Debug />
                         <ToastBaseComponent />
                         <PortalHost />

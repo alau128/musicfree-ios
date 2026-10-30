@@ -13,8 +13,9 @@ import useHardwareBack from "@/hooks/useHardwareBack";
 import rpx from "@/utils/rpx";
 import { useNavigation } from "@react-navigation/native";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Platform, Pressable, StyleSheet, View } from "react-native";
 import {
+    DocumentDirectoryPath,
     ExternalStorageDirectoryPath,
     exists,
     getAllExternalFilesDirs,
@@ -66,6 +67,14 @@ export default function FileSelector() {
             setLoading(true);
             try {
                 if (currentPath.path === "/") {
+                    if (Platform.OS !== "android") {
+                        // iOS 无外部存储概念，从 App 沙盒 Documents 开始浏览
+                        setCurrentPath({
+                            path: DocumentDirectoryPath,
+                            parent: null,
+                        });
+                        return;
+                    }
                     try {
                         const allExt = await getAllExternalFilesDirs();
                         if (allExt.length > 1) {
